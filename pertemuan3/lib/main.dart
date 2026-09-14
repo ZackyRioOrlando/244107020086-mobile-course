@@ -26,6 +26,42 @@ class Zacky extends StatelessWidget {
       ),
       home: Scaffold(
         appBar: AppBar(title: Text('${lagu.judul} by ${lagu.penyanyi}')),
+        drawer: Drawer(
+          child: ListView(
+            children: [
+              DrawerHeader(
+                decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 208, 0, 0),
+                ),
+                child: Text(
+                  'Daftar Lagu',
+                  style: TextStyle(color: Colors.white, fontSize: 24),
+                ),
+              ),
+              ListTile(
+                leading: Icon(Icons.music_note),
+                title: Text('${lagu.judul}'),
+                onTap: () {
+                  print('${lagu.judul}');
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.music_note),
+                title: Text('Daftar Lagu'),
+                onTap: () {
+                  print('Daftar Lagu');
+                },
+              ),
+              ListTile(
+                leading: Icon(Icons.music_note),
+                title: Text('Daftar Lagu'),
+                onTap: () {
+                  print('Daftar Lagu');
+                },
+              ),
+            ],
+          ),
+        ),
         body: SingleChildScrollView(
           child: Center(
             child: Container(
