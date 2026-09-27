@@ -28,7 +28,7 @@ class Zacky extends StatelessWidget {
         appBar: AppBar(title: Text('${lagu.judul} by ${lagu.penyanyi}')),
         body: SingleChildScrollView(
           child: Center(
-            child: Container(
+            child: SizedBox(
               width: 500,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -58,6 +58,7 @@ class Zacky extends StatelessWidget {
           ),
         ),
         bottomNavigationBar: BottomAppBar(
+          color: const Color.fromARGB(255, 222, 13, 13),
           child: Container(
             child: Row(
               mainAxisSize: MainAxisSize.min,
@@ -76,7 +77,6 @@ class Zacky extends StatelessWidget {
               ],
             ),
           ),
-          color: const Color.fromARGB(255, 222, 13, 13),
         ),
       ),
     );
