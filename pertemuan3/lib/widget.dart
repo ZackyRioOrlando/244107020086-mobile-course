@@ -189,7 +189,7 @@ class DaftarWidget extends StatelessWidget {
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
 
-                ButtonBar(
+                OverflowBar(
                   children: [
                     TextButton(onPressed: () {}, child: const Text('Batal')),
                     ElevatedButton(
