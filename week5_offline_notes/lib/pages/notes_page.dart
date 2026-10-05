@@ -6,6 +6,9 @@ import '../providers/note_providers.dart';
 import '../widgets/note_form_dialog.dart';
 import 'settings_page.dart';
 
+import '../data/sync.dart';
+import 'posts_page.dart';
+
 class NotesPage extends ConsumerWidget {
   const NotesPage({super.key});
   Future<void> _openForm(
@@ -43,6 +46,36 @@ class NotesPage extends ConsumerWidget {
               label: Text('$dirty'),
               child: const Icon(Icons.cloud_upload_outlined),
             ),
+          ),
+          // Sisipkan dua IconButton ini di dalam actions AppBar,
+          // sebelum tombol Pengaturan:
+          IconButton(
+            tooltip: 'Posts (cache-first)',
+            icon: const Icon(Icons.article_outlined),
+            onPressed: () =>
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (_) => const PostsPage())),
+          ),
+          IconButton(
+            tooltip: 'Sinkronkan',
+            icon: const Icon(Icons.sync),
+            onPressed: () async {
+              final messenger = ScaffoldMessenger.of(context);
+              try {
+                final count = await ref.read(noteActionsProvider).sync();
+                messenger.showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      count == 0
+                          ? 'Semua catatan sudah tersinkron'
+                          : '$count catatan berhasil disinkronkan',
+                    ),
+                  ),
+                );
+              } on OfflineException catch (e) {
+                messenger.showSnackBar(SnackBar(content: Text(e.message)));
+              }
+            },
           ),
           IconButton(
             tooltip: 'Pengaturan',
