@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/local/note.dart';
 import '../providers/note_providers.dart';
 import '../widgets/note_form_dialog.dart';
+import '../widgets/note_tile.dart';
 import 'settings_page.dart';
 
 import '../data/sync.dart';
@@ -98,24 +99,10 @@ class NotesPage extends ConsumerWidget {
             separatorBuilder: (context, index) => const Divider(height: 1),
             itemBuilder: (context, index) {
               final note = notes[index];
-              return ListTile(
-                leading: Icon(
-                  note.dirty ? Icons.cloud_off : Icons.cloud_done,
-                  color: note.dirty ? Colors.orange : Colors.green,
-                ),
-                title: Text(note.title),
-                subtitle: Text(
-                  note.body.isEmpty ? '(tanpa isi)' : note.body,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
+              return NoteTile(
+                note: note,
                 onTap: () => _openForm(context, ref, note),
-                trailing: IconButton(
-                  tooltip: 'Hapus',
-                  icon: const Icon(Icons.delete_outline),
-                  onPressed: () =>
-                      ref.read(noteActionsProvider).delete(note.id!),
-                ),
+                onDelete: () => ref.read(noteActionsProvider).delete(note.id!),
               );
             },
           );
