@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../data/local/note.dart';
 import '../providers/note_providers.dart';
@@ -101,7 +102,7 @@ class NotesPage extends ConsumerWidget {
               final note = notes[index];
               return NoteTile(
                 note: note,
-                onTap: () => _openForm(context, ref, note),
+                onTap: () => context.push('/note/${note.id}'),
                 onDelete: () => ref.read(noteActionsProvider).delete(note.id!),
               );
             },

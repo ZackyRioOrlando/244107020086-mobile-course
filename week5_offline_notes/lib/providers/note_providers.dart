@@ -11,6 +11,9 @@ final noteRepositoryProvider = Provider<NoteRepository>(
 final notesProvider = FutureProvider<List<Note>>(
   (ref) => ref.watch(noteRepositoryProvider).fetchNotes(),
 );
+final noteByIdProvider = FutureProvider.family<Note?, int>(
+  (ref, id) => ref.watch(noteRepositoryProvider).getNoteById(id),
+);
 final dirtyCountProvider = FutureProvider<int>(
   (ref) => ref.watch(noteRepositoryProvider).countDirty(),
 );
