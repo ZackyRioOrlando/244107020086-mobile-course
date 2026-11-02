@@ -5,16 +5,24 @@ class TokenStore {
       : _storage = storage ?? const FlutterSecureStorage();
 
   final FlutterSecureStorage _storage;
-  static const _accessKey = 'access_token';
-  static const _refreshKey = 'refresh_token';
 
-  Future<void> save({required String access, required String refresh}) async {
-    await _storage.write(key: _accessKey, value: access);
-    await _storage.write(key: _refreshKey, value: refresh);
+  static const _accessKey = 'access_token';
+
+  // Simpan token Sanctum
+  Future<void> save({required String access}) async {
+    await _storage.write(
+      key: _accessKey,
+      value: access,
+    );
   }
 
-  Future<String?> readAccess() => _storage.read(key: _accessKey);
-  Future<String?> readRefresh() => _storage.read(key: _refreshKey);
+  // Ambil token
+  Future<String?> readAccess() {
+    return _storage.read(key: _accessKey);
+  }
 
-  Future<void> clear() => _storage.deleteAll();
+  // Hapus token
+  Future<void> clear() async {
+    await _storage.delete(key: _accessKey);
+  }
 }

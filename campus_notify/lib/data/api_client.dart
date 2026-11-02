@@ -1,34 +1,39 @@
 import 'package:dio/dio.dart';
-import 'auth_repository.dart';
 import 'token_store.dart';
 
-Dio buildApiClient(TokenStore store, AuthRepository auth) {
-  final dio = Dio(BaseOptions(baseUrl: 'https://example-campus-api.test'));
-  dio.interceptors.add(InterceptorsWrapper(
-    onRequest: (options, handler) async {
-      final access = await store.readAccess();
-      if (access != null) {
-        options.headers['Authorization'] = 'Bearer $access';
-      }
-      handler.next(options);
-    },
-    onError: (e, handler) async {
-      if (e.response?.statusCode == 401) {
-        final refresh = await store.readRefresh();
-        if (refresh == null) return handler.next(e);
-        try {
-          final renewed = await auth.refresh(refresh);
-          await store.save(access: renewed, refresh: refresh);
-          final retry = await dio.fetch(
-            e.requestOptions..headers['Authorization'] = 'Bearer $renewed',
-          );
-          return handler.resolve(retry);
-        } catch (_) {
-          await store.clear(); // refresh ikut mati -> paksa login ulang
+Dio buildApiClient(TokenStore store) {
+  final dio = Dio(
+    BaseOptions(
+      baseUrl: 'http://192.168.18.221:8000/api',
+      connectTimeout: const Duration(seconds: 15),
+      receiveTimeout: const Duration(seconds: 15),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    ),
+  );
+
+  dio.interceptors.add(
+    InterceptorsWrapper(
+      onRequest: (options, handler) async {
+        final access = await store.readAccess();
+
+        if (access != null) {
+          options.headers['Authorization'] = 'Bearer $access';
         }
-      }
-      handler.next(e);
-    },
-  ));
+
+        handler.next(options);
+      },
+      onError: (error, handler) async {
+        if (error.response?.statusCode == 401) {
+          await store.clear();
+        }
+
+        handler.next(error);
+      },
+    ),
+  );
+
   return dio;
 }
